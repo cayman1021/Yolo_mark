@@ -634,10 +634,10 @@ int main(int argc, char *argv[])
 			if (show_help)
 			{
 				putText(full_image_roi,
-					"<- prev_img     -> next_img     space - next_img     c - clear_marks     n - one_object_per_img    0-9 - obj_id",
+					"<- Prev Img  -> Next Img  Delete - Clear Marks  0-9/a-z - Obj. ID  TAB - Line Width",
 					Point2i(0, 45), FONT_HERSHEY_SIMPLEX, 0.6, Scalar(50, 10, 10), 2);
 				putText(full_image_roi,
-					"ESC - exit   w - line width   k - hide obj_name   z - undo", //   h - disable help",
+					"ESC - Exit  w - Line Width  SPACE - Show/Hide Obj. Name  Backspace - Undo", //   h - disable help",
 					Point2i(0, 80), FONT_HERSHEY_SIMPLEX, 0.6, Scalar(50, 10, 10), 2);
 			}
 			else
@@ -687,56 +687,54 @@ int main(int argc, char *argv[])
 			if (pressed_key >= '0' && pressed_key <= '9') current_obj_id = pressed_key - '0';   // 0 - 9
 			if (pressed_key >= 1048624 && pressed_key <= 1048633) current_obj_id = pressed_key - 1048624;   // 0 - 9
 
+			//	CAYMAN APPENDIX STARTED (2018/09/10)
+			if (pressed_key >= 'A' && pressed_key <= 'Z')	current_obj_id = pressed_key - 'A' + 10;
+			if (pressed_key >= 'a' && pressed_key <= 'z')	current_obj_id = pressed_key - 'a' + 10;
+			//	CAYMAN ADDENDIX ENDED (2018/09/10)
+
 			switch (pressed_key)
 			{
-			case 'z':		// z
-			case 1048698:	// z
-			    undo = true;
-				break;
-
-			case 32:        // SPACE
-			case 1048608:	// SPACE
-				++trackbar_value;
-				break;
-
-			case 2424832:   // <-
-			case 65361:     // <-
-			case 91:		// [
-				--trackbar_value;
-				break;
-			case 2555904:   // ->
-			case 65363:     // ->
-			case 93:		// ]
-				++trackbar_value;
-				break;
-			case 'c':       // c
-			case 1048675:	// c
-				clear_marks = true;
-				break;
-			case 'm':		// m
-			case 1048685:   // m
-				show_mouse_coords = !show_mouse_coords;
-				full_image.copyTo(full_image_roi);
-				break;
-			case 'n':       // n
-			case 1048686:   // n
-				next_by_click = !next_by_click;
-				full_image.copyTo(full_image_roi);
-				break;
-			case 'w':       // w
-			case 1048695:   // w
-				mark_line_width = mark_line_width % MAX_MARK_LINE_WIDTH + 1;
-			break;
-			case 'h':		// h
-			case 1048680:	// h
-				show_help = !show_help;
-			break;
-			case 'k':
-			case 1048683:
-				show_mark_class = !show_mark_class;
-				break;
-			default:
-				;
+				case 1048584:	//	BACKSPACE
+				case 8:
+					undo = true;
+					break;
+				case 2424832:   // <-
+				case 65361:     // <-
+				case 91:		// [
+					--trackbar_value;
+					break;
+				case 2555904:   // ->
+				case 65363:     // ->
+				case 93:		// ]
+					++trackbar_value;
+					break;
+				case 3014656:	//	DEL
+					clear_marks = true;
+					break;
+				/*case 'm':		// m
+				case 1048685:   // m
+					show_mouse_coords = !show_mouse_coords;
+					full_image.copyTo(full_image_roi);
+					break;
+				case 'n':       // n
+				case 1048686:   // n
+					next_by_click = !next_by_click;
+					full_image.copyTo(full_image_roi);
+					break;*/
+				case 1048585:   //	TAB
+				case 9:
+					mark_line_width = mark_line_width % MAX_MARK_LINE_WIDTH + 1;
+					break;
+				case '/':		//	SLASH
+				case 1048623:
+					show_help = !show_help;
+					break;
+				case 32:        //	SPACE
+				case 1048608:	//	SPACE
+					show_mark_class = !show_mark_class;
+					break;
+				default:
+					;
 			}
 
 			//if (pressed_key >= 0) std::cout << "pressed_key = " << (int)pressed_key << std::endl;
